@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DSA Chatbot Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <span>DSA Tutor</span>
+                </div>
+            </div>
+            <div class="sidebar-content">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    New Chat
+                </button>
+                <div class="chat-history" id="chatHistory">
+                    <h3>Recent Chats</h3>
+                    <div id="historyList"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-container">
+            <div class="chat-header">
+                <div class="header-info">
+                    <h1>Data Structures & Algorithms Assistant</h1>
+                    <p>Expert DSA guidance at your fingertips</p>
+                </div>
+                <div class="header-status">
+                    <span class="status-dot"></span>
+                    <span>Online</span>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-message">
+                    <div class="welcome-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2>Welcome to DSA Tutor!</h2>
+                    <p>Ask me anything about Data Structures and Algorithms. I'll help you solve problems with clear explanations and efficient solutions.</p>
+                    <div class="suggestions">
+                        <button class="suggestion-chip" data-question="Explain binary search with example">
+                            <i class="fas fa-search"></i>
+                            Binary Search
+                        </button>
+                        <button class="suggestion-chip" data-question="How to reverse a linked list?">
+                            <i class="fas fa-link"></i>
+                            Reverse Linked List
+                        </button>
+                        <button class="suggestion-chip" data-question="Explain dynamic programming approach">
+                            <i class="fas fa-chart-line"></i>
+                            Dynamic Programming
+                        </button>
+                        <button class="suggestion-chip" data-question="Time complexity of quicksort">
+                            <i class="fas fa-clock"></i>
+                            QuickSort Complexity
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="userInput" 
+                        placeholder="Ask me about DSA concepts, algorithms, or problem-solving..."
+                        rows="1"
+                    ></textarea>
+                    <button id="sendBtn" class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span>Press Enter to send, Shift + Enter for new line</span>
+                    <span><i class="fas fa-lock"></i> DSA-focused responses only</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

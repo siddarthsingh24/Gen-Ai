@@ -11,6 +11,13 @@ class DSA_Chatbot {
         this.currentChatId = this.generateChatId();
         this.isLoading = false;
         
+        // Auto-detect API URL based on environment
+        this.API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000/api/chat'
+            : '/api/chat';  // Works on Render and other production hosts
+        
+        console.log('Chatbot initialized with API URL:', this.API_URL);
+        
         this.initEventListeners();
         this.displayWelcomeMessage();
         this.addTooltips();
@@ -75,7 +82,7 @@ class DSA_Chatbot {
         this.sendBtn.disabled = true;
         
         try {
-            // Call your existing backend
+            // Call backend API
             const response = await this.callGeminiAPI(message);
             this.removeTypingIndicator();
             this.addMessage(response, 'assistant');
@@ -96,11 +103,8 @@ class DSA_Chatbot {
     }
     
     async callGeminiAPI(question) {
-        // Update this URL to match your backend
-        const API_URL = 'http://localhost:3000/api/chat';
-        
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(this.API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,9 +114,9 @@ class DSA_Chatbot {
             
             if (!response.ok) {
                 if (response.status === 503) {
-                    throw new Error('Server is temporarily unavailable. Please check if your backend is running.');
+                    throw new Error('Server is starting up. Please wait a moment and try again.');
                 } else if (response.status === 404) {
-                    throw new Error('API endpoint not found. Please check your server configuration.');
+                    throw new Error('API endpoint not found. Please check server configuration.');
                 } else {
                     throw new Error(`API request failed with status ${response.status}`);
                 }
@@ -123,9 +127,12 @@ class DSA_Chatbot {
             
         } catch (error) {
             console.error('API Error:', error);
-            // Enhanced fallback response for testing
+            // Enhanced error message based on environment
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             const errorMsg = error.message.includes('Failed to fetch') 
-                ? "❌ Connection error: Cannot reach the server. Make sure your backend is running on http://localhost:3000" 
+                ? isLocalhost 
+                    ? "❌ Connection error: Cannot reach the server. Make sure your backend is running on http://localhost:3000" 
+                    : "❌ Connection error: Server is waking up. Please wait 20-30 seconds and try again. (Free tier cold start)"
                 : "❌ " + error.message;
             return errorMsg;
         }
@@ -474,7 +481,7 @@ class DSA_Chatbot {
     }
 }
 
-// Add CSS for history items
+// Add CSS for history items and error animation
 const style = document.createElement('style');
 style.textContent = `
     .history-item {
@@ -505,8 +512,9 @@ style.textContent = `
         opacity: 0.6;
     }
     
-    .error-shake {
+    .error-animation {
         animation: shake 0.3s ease-in-out;
+        border-color: #ef4444 !important;
     }
     
     @keyframes shake {
@@ -522,6 +530,42 @@ style.textContent = `
     
     pre:hover .copy-btn {
         opacity: 1;
+    }
+    
+    .typing-indicator {
+        display: flex;
+        gap: 6px;
+        padding: 12px 16px;
+        background: white;
+        border-radius: 20px;
+        width: fit-content;
+    }
+    
+    .typing-indicator span {
+        width: 8px;
+        height: 8px;
+        background: #667eea;
+        border-radius: 50%;
+        animation: typingBounce 1.4s infinite;
+    }
+    
+    .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes typingBounce {
+        0%, 60%, 100% {
+            transform: translateY(0);
+            opacity: 0.5;
+        }
+        30% {
+            transform: translateY(-10px);
+            opacity: 1;
+        }
     }
 `;
 document.head.appendChild(style);

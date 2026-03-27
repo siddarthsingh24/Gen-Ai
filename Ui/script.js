@@ -103,6 +103,7 @@ class DSA_Chatbot {
     }
     
     async callGeminiAPI(question) {
+        this.showColdStartNotice();
         try {
             const response = await fetch(this.API_URL, {
                 method: 'POST',
@@ -137,6 +138,16 @@ class DSA_Chatbot {
             return errorMsg;
         }
     }
+    showColdStartNotice() {
+        const notice = document.createElement('div');
+        notice.className = 'cold-start-notice';
+        notice.innerHTML = `
+          <i class="fas fa-coffee"></i>
+          <span>Waking up server (free tier cold start). This may take 20-30 seconds...</span>
+    `;
+    this.messagesContainer.appendChild(notice);
+    setTimeout(() => notice.remove(), 5000);
+}
     
     addMessage(content, role) {
         const messageDiv = document.createElement('div');
